@@ -1,6 +1,5 @@
 package com.growmighty.lectures.firstday.tangledmonolith.order;
 
-import com.growmighty.lectures.firstday.tangledmonolith.product.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,16 +18,14 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    private Long productId;
 
     @Column(nullable = false)
     private Integer quantity;
 
-    public static OrderItem create(Product product, int quantity) {
+    public static OrderItem create(Long productId, int quantity) {
         OrderItem orderItem = new OrderItem();
-        orderItem.product = product;
+        orderItem.productId = productId;
         orderItem.quantity = quantity;
 
         return orderItem;
