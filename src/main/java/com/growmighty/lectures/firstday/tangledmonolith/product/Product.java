@@ -17,6 +17,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //@ManyToOne 의 관계이므로 Product가 키를 가짐
+    @Column(nullable = false)
     private Long sellerId;
 
     @Column(nullable = false)

@@ -19,6 +19,7 @@ public class CartItem {
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
+    @Column(nullable = false)
     private Long productId;
 
     @Column(nullable = false)

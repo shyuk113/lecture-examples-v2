@@ -17,8 +17,7 @@ public class Seller {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private List<Long> productIds = new ArrayList<>();
-
+    @Column(nullable = false)
     private Long userId;
 
     public static Seller create(Long userId) {
