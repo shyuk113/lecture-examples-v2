@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "carts")
@@ -29,12 +30,41 @@ public class Cart {
         return cart;
     }
 
-    public void addItem(CartItem item) {
-        this.items.add(item);
+    public void addItem(Long productId, Integer quantity) {
+        validateQuantity(quantity);
+        findItem(productId).ifPresentOrElse(
+                item -> item.increaseQuantity(quantity),
+                () -> items.add(CartItem.create(productId, quantity))
+        );
+    }
 
-        if (item.getCart() != this) {
-            item.assignCart(this);
+    public void changeQuantity(Long productId, Integer quantity) {
+        validateQuantity(quantity);
+        getItem(productId).changeQuantity(quantity);
+    }
+
+    public void removeItem(Long productId){
+        CartItem cartItem = items.stream()
+                .filter(cartItem1 -> cartItem1.getProductId().equals(productId))
+                .findFirst().orElseThrow(()-> new IllegalArgumentException("존재하지 않는 상품입니다."));
+
+        items.remove(cartItem);
+    }
+
+    private void validateQuantity(Integer quantity){
+        if(quantity <= 0){
+            throw new IllegalArgumentException("수량은 1개 이상이어야 한다.");
         }
+    }
+
+    private Optional<CartItem> findItem(Long productId){
+        return items.stream()
+                .filter(cartItem1 -> cartItem1.getProductId().equals(productId))
+                .findFirst();
+    }
+
+    private CartItem getItem(Long productId){
+        return findItem(productId).orElseThrow(()-> new IllegalArgumentException("카트에 존재하지 않은 상품입니다"));
     }
 
     public void clear() {
